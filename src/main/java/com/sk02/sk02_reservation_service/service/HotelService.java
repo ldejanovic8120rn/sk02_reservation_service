@@ -6,6 +6,8 @@ import com.sk02.sk02_reservation_service.dto.hotel.HotelUpdateDto;
 
 public interface HotelService {
 
+    HotelDto getHotelById(Long id);
+
     HotelDto createHotel(HotelCreateDto hotelCreateDto);
 
     HotelDto updateHotel(Long id, HotelUpdateDto hotelUpdateDto);

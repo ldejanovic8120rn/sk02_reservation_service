@@ -26,6 +26,11 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public HotelDto getHotelById(Long id) {
+        return hotelMapper.hotelToHotelDto(hotelRepository.findById(id).orElseThrow(() -> new NotFoundException(hotelNotFound)));
+    }
+
+    @Override
     public HotelDto createHotel(HotelCreateDto hotelCreateDto) {
         Hotel hotel = hotelMapper.hotelCreateDtoToHotel(hotelCreateDto);
         return hotelMapper.hotelToHotelDto(hotelRepository.save(hotel));
