@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "rooms", uniqueConstraints = {@UniqueConstraint(columnNames = {"hotel", "roomNumber"})})
-//TODO: mozda rikne columnNames
+@Table(name = "rooms", uniqueConstraints = {@UniqueConstraint(columnNames = {"hotel_id", "roomNumber"})})
 public class Room {
 
     @Id
