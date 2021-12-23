@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/room-types")
 public class RoomTypeController {
 
-    private RoomTypeService roomTypeService;
+    private final RoomTypeService roomTypeService;
+
+    public RoomTypeController(RoomTypeService roomTypeService) {
+        this.roomTypeService = roomTypeService;
+    }
 
     @PostMapping("/{hotelId}")
     public ResponseEntity<RoomTypeDto> createRoomType(@PathVariable("hotelId") Long hotelId, @RequestBody RoomTypeCreateDto roomTypeCreateDto){

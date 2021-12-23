@@ -45,6 +45,5 @@ public class RoomTypeMapper {
         if(roomTypeUpdateDto.getUpperBound() != 0){
             roomType.setUpperBound(roomTypeUpdateDto.getUpperBound());
         }
-        //TODO DINAMICKA PROMENA SVEGA OSTALOG!
     }
 }

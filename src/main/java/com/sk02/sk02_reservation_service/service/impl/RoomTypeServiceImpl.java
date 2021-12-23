@@ -1,5 +1,6 @@
 package com.sk02.sk02_reservation_service.service.impl;
 
+import com.sk02.sk02_reservation_service.domain.Hotel;
 import com.sk02.sk02_reservation_service.domain.Room;
 import com.sk02.sk02_reservation_service.domain.RoomType;
 import com.sk02.sk02_reservation_service.dto.roomtype.RoomTypeCreateDto;
@@ -24,19 +25,20 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private final RoomTypeMapper roomTypeMapper;
     private final RoomTypeRepository roomTypeRepository;
     private final HotelRepository hotelRepository;
-    private final RoomRepository roomRepository;
 
-    public RoomTypeServiceImpl(RoomTypeMapper roomTypeMapper, RoomTypeRepository roomTypeRepository, HotelRepository hotelRepository, RoomRepository roomRepository) {
+    public RoomTypeServiceImpl(RoomTypeMapper roomTypeMapper, RoomTypeRepository roomTypeRepository, HotelRepository hotelRepository) {
         this.roomTypeMapper = roomTypeMapper;
         this.roomTypeRepository = roomTypeRepository;
         this.hotelRepository = hotelRepository;
-        this.roomRepository = roomRepository;
     }
 
     @Override
     public RoomTypeDto createRoomType(Long hotelId, RoomTypeCreateDto roomTypeCreateDto) {
         RoomType roomType = roomTypeMapper.roomTypeCreateDtoToRoomType(roomTypeCreateDto);
         roomType.setHotel(hotelRepository.findById(hotelId).orElseThrow(() -> new NotFoundException(hotelNotFound)));
+
+        Hotel hotel = roomType.getHotel();
+        hotel.setRoomsNumber(hotel.getRoomsNumber() + (roomType.getUpperBound() - roomType.getLowerBound()) + 1);
 
         for(int i = roomType.getLowerBound(); i < roomType.getUpperBound(); i++){
             Room room = new Room();
@@ -45,8 +47,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             room.setRoomType(roomType);
             roomType.getRooms().add(room);
-
-            roomRepository.save(room);
         }
 
         return roomTypeMapper.roomTypeToRoomTypeDto(roomTypeRepository.save(roomType));
@@ -56,6 +56,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public RoomTypeDto updateRoomType(Long id, RoomTypeUpdateDto roomTypeUpdateDto) {
         RoomType roomType = roomTypeRepository.findById(id).orElseThrow(() -> new NotFoundException(roomTypeNotFound));
         roomTypeMapper.updateRoomType(roomType, roomTypeUpdateDto);
+        //TODO DINAMICKA PROMENA
         return roomTypeMapper.roomTypeToRoomTypeDto(roomTypeRepository.save(roomType));
     }
 
