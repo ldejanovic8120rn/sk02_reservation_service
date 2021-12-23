@@ -16,6 +16,49 @@ public class Room {
     @ManyToOne
     private Hotel hotel;
 
+    @ManyToOne
+    private RoomType roomType;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
     private List<Period> period = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    public List<Period> getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(List<Period> period) {
+        this.period = period;
+    }
 }
