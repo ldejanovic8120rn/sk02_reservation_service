@@ -101,16 +101,23 @@ public class SecurityAspect {
         if (claims == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        long managerId = Long.parseLong(claims.get("id", String.class));
+        String role = claims.get("role", String.class);
+        if(role.equals("MANAGER")){
+            long managerId = claims.get("id", Long.class);
 
-        ResponseEntity<ManagerAttributesDto> managerAttributesResponseEntity = null;
-        managerAttributesResponseEntity = userServiceRestTemplate.exchange("/users/manager-attributes/" + managerId, HttpMethod.GET, null, ManagerAttributesDto.class);
+            ResponseEntity<ManagerAttributesDto> managerAttributesResponseEntity = null;
+            managerAttributesResponseEntity = userServiceRestTemplate.exchange("/manager-attributes/" + managerId, HttpMethod.GET, null, ManagerAttributesDto.class);
 
-        HotelDto hotelDto = hotelService.getHotelById(hotelId);
+            HotelDto hotelDto = hotelService.getHotelById(hotelId);
 
-        if(managerAttributesResponseEntity.getBody().getHotelName().equals(hotelDto.getName())){
+            if(managerAttributesResponseEntity.getBody().getHotelName().equals(hotelDto.getName())){
+                return joinPoint.proceed();
+            }
+        }
+        else if(role.equals("ADMIN")){
             return joinPoint.proceed();
         }
+
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 

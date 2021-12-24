@@ -30,7 +30,7 @@ public class UserServiceConfiguration {
         public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes,
                                             ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
             HttpHeaders headers = httpRequest.getHeaders();
-            headers.add("Authorization", "Bearer "); //TODO DODAJ TOKEN
+            headers.add("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6Miwicm9sZSI6IkFETUlOIn0.9uM8St07hI-j8w_LQjJBBAR8jgBePSzXYdf7Pkqk_TSis0fQqnAPXwtFskP7RsMfeyPViVmNZgAuW7rFYleVsg");
             return clientHttpRequestExecution.execute(httpRequest, bytes);
         }
     }

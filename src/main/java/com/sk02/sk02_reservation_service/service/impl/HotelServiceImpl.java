@@ -4,12 +4,18 @@ import com.sk02.sk02_reservation_service.domain.Hotel;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelCreateDto;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelDto;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelUpdateDto;
+import com.sk02.sk02_reservation_service.dto.user.HotelNewNameDto;
+import com.sk02.sk02_reservation_service.dto.user.ManagerAttributesDto;
 import com.sk02.sk02_reservation_service.exception.NotFoundException;
 import com.sk02.sk02_reservation_service.mapper.HotelMapper;
 import com.sk02.sk02_reservation_service.repository.HotelRepository;
 import com.sk02.sk02_reservation_service.service.HotelService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -19,10 +25,12 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelMapper hotelMapper;
     private final HotelRepository hotelRepository;
+    private RestTemplate userServiceRestTemplate;
 
-    public HotelServiceImpl(HotelMapper hotelMapper, HotelRepository hotelRepository) {
+    public HotelServiceImpl(HotelMapper hotelMapper, HotelRepository hotelRepository, RestTemplate userServiceRestTemplate) {
         this.hotelMapper = hotelMapper;
         this.hotelRepository = hotelRepository;
+        this.userServiceRestTemplate = userServiceRestTemplate;
     }
 
     @Override
@@ -39,6 +47,15 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public HotelDto updateHotel(Long id, HotelUpdateDto hotelUpdateDto) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new NotFoundException(hotelNotFound));
+
+        if(hotelUpdateDto.getName() != null){
+            HotelNewNameDto hotelNewNameDto = new HotelNewNameDto();
+            hotelNewNameDto.setOldName(hotel.getName());
+            hotelNewNameDto.setNewName(hotelUpdateDto.getName());
+
+            userServiceRestTemplate.exchange("/manager-attributes/new-name", HttpMethod.PUT, new HttpEntity<>(hotelNewNameDto), ManagerAttributesDto.class);
+        }
+
         hotelMapper.updateHotel(hotel, hotelUpdateDto);
 
         return hotelMapper.hotelToHotelDto(hotelRepository.save(hotel));
