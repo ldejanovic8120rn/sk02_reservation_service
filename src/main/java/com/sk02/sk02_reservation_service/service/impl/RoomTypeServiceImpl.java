@@ -15,7 +15,9 @@ import com.sk02.sk02_reservation_service.service.RoomTypeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 @Service
 @Transactional
@@ -151,15 +153,20 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public void checkEmptyRoomTypes(Long hotelId){
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new NotFoundException(hotelNotFound));
 
-        Iterator<RoomType> rtIterator = hotel.getRoomTypes().iterator();
-        while (rtIterator.hasNext()){
-            RoomType rt = rtIterator.next();
-            System.out.println(rt.getCategory() + " " + rt.getRooms().size());
+        List<RoomType> rtList = new ArrayList<>(hotel.getRoomTypes());
+        List<Long> rtIds = new ArrayList<>();
+        hotel.getRoomTypes().clear();
+
+        for(RoomType rt: rtList){
             if(rt.getRooms().isEmpty()){
-                System.out.println("usao if " + rt.getId());
-                //roomTypeRepository.delete(rt);
-                roomTypeRepository.deleteById(Long.valueOf("2"));
+                rtIds.add(rt.getId());
+            }
+            else {
+                hotel.getRoomTypes().add(rt);
             }
         }
+
+        roomTypeRepository.deleteAllById(rtIds);
+        hotelRepository.save(hotel);
     }
 }
