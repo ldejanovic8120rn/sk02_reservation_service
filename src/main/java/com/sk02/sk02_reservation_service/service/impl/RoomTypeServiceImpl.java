@@ -43,7 +43,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomType roomType = roomTypeMapper.roomTypeCreateDtoToRoomType(roomTypeCreateDto);
         roomType.setHotel(hotelRepository.findById(hotelId).orElseThrow(() -> new NotFoundException(hotelNotFound)));
 
-        for(int i = roomType.getLowerBound(); i < roomType.getUpperBound(); i++){
+        for(int i = roomType.getLowerBound(); i <= roomType.getUpperBound(); i++){
             Room room = new Room();
             room.setHotel(roomType.getHotel());
             room.setRoomNumber(i);
@@ -81,7 +81,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void updateLowerBound(RoomType roomType, int lowerBound){
         if (lowerBound < roomType.getLowerBound()){
-            for(int i = lowerBound; i < roomType.getLowerBound(); i++){
+            for(int i = lowerBound; i <= roomType.getLowerBound(); i++){
                 Room room = roomRepository.findRoomByRoomNumberAndHotelId(i, roomType.getHotel().getId());
                 if(room == null){
                     room = new Room();
@@ -94,11 +94,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                     room.setRoomType(roomType);
                 }
             }
-            roomTypeIntersected(lowerBound, roomType.getId(), roomType.getHotel().getId(), false);
+            roomTypeIntersected(lowerBound - 1, roomType.getId(), roomType.getHotel().getId(), false);
         }
         else {
             for(int i = roomType.getLowerBound(); i < lowerBound; i++){
                 Room room = roomRepository.findRoomByRoomNumberAndHotelId(i, roomType.getHotel().getId());
+                roomType.getRooms().remove(room);
                 roomRepository.delete(room);
             }
         }
@@ -108,7 +109,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void updateUpperBound(RoomType roomType, int upperBound){
         if(upperBound > roomType.getUpperBound()){
-            for (int i = roomType.getUpperBound(); i < upperBound; i++){
+            for (int i = roomType.getUpperBound(); i <= upperBound; i++){
                 Room room = roomRepository.findRoomByRoomNumberAndHotelId(i, roomType.getHotel().getId());
                 if(room == null){
                     room = new Room();
@@ -121,11 +122,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                     room.setRoomType(roomType);
                 }
             }
-            roomTypeIntersected(upperBound, roomType.getId(), roomType.getHotel().getId(), true);
+            roomTypeIntersected(upperBound + 1, roomType.getId(), roomType.getHotel().getId(), true);
         }
         else {
             for (int i = upperBound; i < roomType.getUpperBound(); i++){
                 Room room = roomRepository.findRoomByRoomNumberAndHotelId(i, roomType.getHotel().getId());
+                roomType.getRooms().remove(room);
                 roomRepository.delete(room);
             }
         }
