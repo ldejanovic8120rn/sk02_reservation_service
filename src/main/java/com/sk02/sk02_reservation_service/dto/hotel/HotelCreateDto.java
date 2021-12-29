@@ -10,6 +10,9 @@ public class HotelCreateDto {
     @NotEmpty
     private String description;
 
+    @NotEmpty
+    private String city;
+
     public String getName() {
         return name;
     }
@@ -24,5 +27,13 @@ public class HotelCreateDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

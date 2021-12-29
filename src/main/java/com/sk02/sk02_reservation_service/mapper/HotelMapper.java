@@ -15,7 +15,7 @@ public class HotelMapper {
         hotelDto.setId(hotel.getId());
         hotelDto.setName(hotel.getName());
         hotelDto.setDescription(hotel.getDescription());
-        hotelDto.setRoomsNumber(hotel.getRoomsNumber());
+        hotelDto.setCity(hotel.getCity());
 
         return hotelDto;
     }
@@ -25,7 +25,7 @@ public class HotelMapper {
 
         hotel.setName(hotelCreateDto.getName());
         hotel.setDescription(hotelCreateDto.getDescription());
-        hotel.setRoomsNumber(0);
+        hotel.setCity(hotelCreateDto.getCity());
 
         return hotel;
     }
@@ -36,6 +36,9 @@ public class HotelMapper {
         }
         if (hotelUpdateDto.getDescription() != null){
             hotel.setDescription(hotelUpdateDto.getDescription());
+        }
+        if (hotelUpdateDto.getCity() != null){
+            hotel.setCity(hotelUpdateDto.getCity());
         }
     }
 

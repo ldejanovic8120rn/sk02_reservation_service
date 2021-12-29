@@ -6,7 +6,7 @@ public class HotelDto {
 
     private String name;
     private String description;
-    private int roomsNumber;
+    private String city;
 
     public Long getId() {
         return id;
@@ -32,11 +32,11 @@ public class HotelDto {
         this.description = description;
     }
 
-    public int getRoomsNumber() {
-        return roomsNumber;
+    public String getCity() {
+        return city;
     }
 
-    public void setRoomsNumber(int roomsNumber) {
-        this.roomsNumber = roomsNumber;
+    public void setCity(String city) {
+        this.city = city;
     }
 }

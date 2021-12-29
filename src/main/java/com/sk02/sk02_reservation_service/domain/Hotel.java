@@ -14,7 +14,7 @@ public class Hotel {
 
     private String name;
     private String description;
-    private int roomsNumber;
+    private String city;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")
     private List<RoomType> roomTypes = new ArrayList<>();
@@ -46,12 +46,12 @@ public class Hotel {
         this.description = description;
     }
 
-    public int getRoomsNumber() {
-        return roomsNumber;
+    public String getCity() {
+        return city;
     }
 
-    public void setRoomsNumber(int roomsNumber) {
-        this.roomsNumber = roomsNumber;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public List<RoomType> getRoomTypes() {

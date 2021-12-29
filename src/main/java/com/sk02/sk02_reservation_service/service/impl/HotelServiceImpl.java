@@ -25,7 +25,7 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelMapper hotelMapper;
     private final HotelRepository hotelRepository;
-    private RestTemplate userServiceRestTemplate;
+    private final RestTemplate userServiceRestTemplate;
 
     public HotelServiceImpl(HotelMapper hotelMapper, HotelRepository hotelRepository, RestTemplate userServiceRestTemplate) {
         this.hotelMapper = hotelMapper;
