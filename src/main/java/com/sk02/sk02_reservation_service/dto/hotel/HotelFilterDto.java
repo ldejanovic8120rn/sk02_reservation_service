@@ -10,7 +10,7 @@ public class HotelFilterDto {
     private Date startDate;
     private Date endDate;
 
-    private boolean priceSort;
+    private String priceSort;
 
     public String getName() {
         return name;
@@ -44,11 +44,11 @@ public class HotelFilterDto {
         this.endDate = endDate;
     }
 
-    public boolean isPriceSort() {
+    public String getPriceSort() {
         return priceSort;
     }
 
-    public void setPriceSort(boolean priceSort) {
+    public void setPriceSort(String priceSort) {
         this.priceSort = priceSort;
     }
 }

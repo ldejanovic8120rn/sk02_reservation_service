@@ -8,4 +8,5 @@ import java.util.List;
 public interface HotelFilterService {
 
     List<HotelFilterViewDto> findHotels(HotelFilterDto hotelFilterDto);
+    //TODO page ili list?
 }
