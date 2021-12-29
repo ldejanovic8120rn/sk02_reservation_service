@@ -1,10 +1,11 @@
 package com.sk02.sk02_reservation_service.dto.hotel;
 
-public class HotelFilterViewDto {
+public class HotelFilterViewDto implements Comparable{
 
     private String hotelId;
     private String hotelName;
     private String hotelDescription;
+    private String hotelCity;
 
     private String roomTypeId;
     private String roomTypeCategory;
@@ -34,6 +35,14 @@ public class HotelFilterViewDto {
         this.hotelDescription = hotelDescription;
     }
 
+    public String getHotelCity() {
+        return hotelCity;
+    }
+
+    public void setHotelCity(String hotelCity) {
+        this.hotelCity = hotelCity;
+    }
+
     public String getRoomTypeId() {
         return roomTypeId;
     }
@@ -56,5 +65,10 @@ public class HotelFilterViewDto {
 
     public void setRoomTypePrice(String roomTypePrice) {
         this.roomTypePrice = roomTypePrice;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.roomTypePrice.compareTo(((HotelFilterViewDto)o).getRoomTypePrice());
     }
 }

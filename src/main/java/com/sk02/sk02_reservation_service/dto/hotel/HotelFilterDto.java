@@ -1,5 +1,7 @@
 package com.sk02.sk02_reservation_service.dto.hotel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class HotelFilterDto {
@@ -7,7 +9,9 @@ public class HotelFilterDto {
     private String name;
     private String city;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date startDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date endDate;
 
     private String priceSort;

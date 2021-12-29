@@ -1,25 +1,27 @@
 package com.sk02.sk02_reservation_service.controller;
 
-import com.sk02.sk02_reservation_service.dto.hotel.HotelCreateDto;
-import com.sk02.sk02_reservation_service.dto.hotel.HotelDto;
-import com.sk02.sk02_reservation_service.dto.hotel.HotelUpdateDto;
+import com.sk02.sk02_reservation_service.dto.hotel.*;
 import com.sk02.sk02_reservation_service.security.CheckHotelManager;
 import com.sk02.sk02_reservation_service.security.CheckSecurity;
+import com.sk02.sk02_reservation_service.service.HotelFilterService;
 import com.sk02.sk02_reservation_service.service.HotelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/hotels")
 public class HotelController {
 
     private final HotelService hotelService;
+    private final HotelFilterService hotelFilterService;
 
-    public HotelController(HotelService hotelService) {
+    public HotelController(HotelService hotelService, HotelFilterService hotelFilterService) {
         this.hotelService = hotelService;
+        this.hotelFilterService = hotelFilterService;
     }
 
     @PostMapping
@@ -40,5 +42,10 @@ public class HotelController {
     public ResponseEntity<HttpStatus> deleteHotel(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
         hotelService.deleteHotel(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<HotelFilterViewDto>> filterHotels(@RequestBody HotelFilterDto hotelFilterDto){
+        return new ResponseEntity<>(hotelFilterService.findHotels(hotelFilterDto), HttpStatus.OK);
     }
 }

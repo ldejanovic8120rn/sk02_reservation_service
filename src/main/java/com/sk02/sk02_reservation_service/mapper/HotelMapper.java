@@ -1,8 +1,10 @@
 package com.sk02.sk02_reservation_service.mapper;
 
 import com.sk02.sk02_reservation_service.domain.Hotel;
+import com.sk02.sk02_reservation_service.domain.RoomType;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelCreateDto;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelDto;
+import com.sk02.sk02_reservation_service.dto.hotel.HotelFilterViewDto;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelUpdateDto;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,21 @@ public class HotelMapper {
         if (hotelUpdateDto.getCity() != null){
             hotel.setCity(hotelUpdateDto.getCity());
         }
+    }
+
+    public HotelFilterViewDto makeFilterView(Hotel hotel, RoomType roomType){
+        HotelFilterViewDto filterViewDto = new HotelFilterViewDto();
+
+        filterViewDto.setHotelId(hotel.getId().toString());
+        filterViewDto.setHotelName(hotel.getName());
+        filterViewDto.setHotelDescription(hotel.getDescription());
+        filterViewDto.setHotelCity(hotel.getCity());
+
+        filterViewDto.setRoomTypeId(roomType.getId().toString());
+        filterViewDto.setRoomTypeCategory(roomType.getCategory());
+        filterViewDto.setRoomTypePrice(String.valueOf(roomType.getPrice()));
+
+        return filterViewDto;
     }
 
 }

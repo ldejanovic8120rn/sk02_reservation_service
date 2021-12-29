@@ -9,6 +9,6 @@ import java.util.Date;
 @Repository
 public interface PeriodRepository extends JpaRepository<Period, Long> {
 
-    Period findPeriodByStartDateBeforeAndEndDateAfterAndRoomId(Date date, Long roomId);
+    Period findPeriodByStartDateBeforeAndEndDateAfterAndRoomId(Date startDate, Date endDate, Long roomId);
     Period findPeriodByStartDateAfterAndEndDateBeforeAndRoomId(Date startDate, Date endDate, Long roomId);
 }
