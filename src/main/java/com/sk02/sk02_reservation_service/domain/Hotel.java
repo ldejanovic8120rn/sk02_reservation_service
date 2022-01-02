@@ -22,6 +22,9 @@ public class Hotel {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")
     private List<Room> rooms = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")
+    private List<Review> reviews = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -68,5 +71,13 @@ public class Hotel {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

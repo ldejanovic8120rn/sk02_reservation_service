@@ -43,7 +43,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final HotelRepository hotelRepository;
     private final RoomTypeRepository roomTypeRepository;
     private final PeriodRepository periodRepository;
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
     private final ReservationMapper reservationMapper;
 
     public ReservationServiceImpl(TokenService tokenService, RestTemplate userServiceRestTemplate, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomTypeRepository roomTypeRepository, PeriodRepository periodRepository, RoomRepository roomRepository, ReservationMapper reservationMapper) {
