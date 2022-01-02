@@ -29,7 +29,7 @@ public class SecurityAspect {
     private String jwtSecret;
 
     private final TokenService tokenService;
-    private HotelService hotelService;
+    private final HotelService hotelService;
     private final RestTemplate userServiceRestTemplate;
 
     public SecurityAspect(TokenService tokenService, HotelService hotelService, RestTemplate userServiceRestTemplate) {
@@ -89,7 +89,7 @@ public class SecurityAspect {
                     token = joinPoint.getArgs()[i].toString().split(" ")[1];
                 }
             }
-            if (methodSignature.getParameterNames()[i].equals("id")){
+            if (methodSignature.getParameterNames()[i].equals("hotelId")){
                 hotelId = (Long) joinPoint.getArgs()[i];
             }
         }

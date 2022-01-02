@@ -3,7 +3,6 @@ package com.sk02.sk02_reservation_service.service.impl;
 import com.sk02.sk02_reservation_service.domain.Hotel;
 import com.sk02.sk02_reservation_service.domain.Period;
 import com.sk02.sk02_reservation_service.domain.Room;
-import com.sk02.sk02_reservation_service.domain.RoomType;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelFilterDto;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelFilterViewDto;
 import com.sk02.sk02_reservation_service.exception.DateRequiredException;
@@ -67,24 +66,16 @@ public class HotelFilterServiceImpl implements HotelFilterService {
         for (Hotel hotel: hotels){
             for (Room room: hotel.getRooms()){
 
-                if(room.getPeriod().isEmpty()){
+                List<Period> p1 = periodRepository.findPeriodByStartDateBeforeAndEndDateAfterAndRoomId(startDate, startDate, room.getId());
+                List<Period> p2 = periodRepository.findPeriodByStartDateBeforeAndEndDateAfterAndRoomId(endDate, endDate, room.getId());
+                List<Period> p3 = periodRepository.findPeriodByStartDateAfterAndEndDateBeforeAndRoomId(startDate, endDate, room.getId());
+                List<Period> p4 = periodRepository.findPeriodByStartDateAndEndDateAndRoomId(startDate, endDate, room.getId());
+
+                if(p1.isEmpty() && p2.isEmpty() && p3.isEmpty() && p4.isEmpty()){
                     Pair<String,String> pair = Pair.with(hotel.getName(), room.getRoomType().getCategory());
                     if(!hotelCategoryPairs.contains(pair)){
                         hotelCategoryPairs.add(pair);
-                        hotelsToReturn.add(hotelMapper.makeFilterView(hotel, room.getRoomType()));
-                    }
-                }
-                else {
-                    Period p1 = periodRepository.findPeriodByStartDateBeforeAndEndDateAfterAndRoomId(startDate, startDate, room.getId());
-                    Period p2 = periodRepository.findPeriodByStartDateBeforeAndEndDateAfterAndRoomId(endDate, endDate, room.getId());
-                    Period p3 = periodRepository.findPeriodByStartDateAfterAndEndDateBeforeAndRoomId(startDate, endDate, room.getId());
-
-                    if(p1 == null && p2 == null && p3 == null){
-                        Pair<String,String> pair = Pair.with(hotel.getName(), room.getRoomType().getCategory());
-                        if(!hotelCategoryPairs.contains(pair)){
-                            hotelCategoryPairs.add(pair);
-                            hotelsToReturn.add(hotelMapper.makeFilterView(hotel, room.getRoomType()));
-                        }
+                        hotelsToReturn.add(hotelMapper.makeFilterView(hotel, room.getRoomType(), startDate, endDate));
                     }
                 }
             }

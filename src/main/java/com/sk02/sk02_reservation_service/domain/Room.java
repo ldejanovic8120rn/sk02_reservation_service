@@ -20,7 +20,7 @@ public class Room {
     private RoomType roomType;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
-    private List<Period> period = new ArrayList<>();
+    private List<Period> periods = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -54,11 +54,11 @@ public class Room {
         this.roomType = roomType;
     }
 
-    public List<Period> getPeriod() {
-        return period;
+    public List<Period> getPeriods() {
+        return periods;
     }
 
-    public void setPeriod(List<Period> period) {
-        this.period = period;
+    public void setPeriods(List<Period> period) {
+        this.periods = period;
     }
 }

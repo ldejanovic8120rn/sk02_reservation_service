@@ -30,11 +30,11 @@ public class HotelController {
         return new ResponseEntity<>(hotelService.createHotel(hotelCreateDto), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{hotel-id}")
     @CheckSecurity(roles = {"ADMIN", "MANAGER"})
     @CheckHotelManager
-    public ResponseEntity<HotelDto> updateHotel(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id, @RequestBody HotelUpdateDto hotelUpdateDto){
-        return new ResponseEntity<>(hotelService.updateHotel(id, hotelUpdateDto), HttpStatus.OK);
+    public ResponseEntity<HotelDto> updateHotel(@RequestHeader("Authorization") String authorization, @PathVariable("hotel-id") Long hotelId, @RequestBody HotelUpdateDto hotelUpdateDto){
+        return new ResponseEntity<>(hotelService.updateHotel(hotelId, hotelUpdateDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

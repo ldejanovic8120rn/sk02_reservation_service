@@ -1,5 +1,9 @@
 package com.sk02.sk02_reservation_service.dto.hotel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 public class HotelFilterViewDto implements Comparable{
 
     private String hotelId;
@@ -10,6 +14,11 @@ public class HotelFilterViewDto implements Comparable{
     private String roomTypeId;
     private String roomTypeCategory;
     private String roomTypePrice;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date startDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date endDate;
 
     public String getHotelId() {
         return hotelId;
@@ -65,6 +74,22 @@ public class HotelFilterViewDto implements Comparable{
 
     public void setRoomTypePrice(String roomTypePrice) {
         this.roomTypePrice = roomTypePrice;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     @Override

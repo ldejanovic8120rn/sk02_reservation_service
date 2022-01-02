@@ -8,6 +8,8 @@ import com.sk02.sk02_reservation_service.dto.hotel.HotelFilterViewDto;
 import com.sk02.sk02_reservation_service.dto.hotel.HotelUpdateDto;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class HotelMapper {
 
@@ -44,7 +46,7 @@ public class HotelMapper {
         }
     }
 
-    public HotelFilterViewDto makeFilterView(Hotel hotel, RoomType roomType){
+    public HotelFilterViewDto makeFilterView(Hotel hotel, RoomType roomType, Date startDate, Date endDate){
         HotelFilterViewDto filterViewDto = new HotelFilterViewDto();
 
         filterViewDto.setHotelId(hotel.getId().toString());
@@ -55,6 +57,9 @@ public class HotelMapper {
         filterViewDto.setRoomTypeId(roomType.getId().toString());
         filterViewDto.setRoomTypeCategory(roomType.getCategory());
         filterViewDto.setRoomTypePrice(String.valueOf(roomType.getPrice()));
+
+        filterViewDto.setStartDate(startDate);
+        filterViewDto.setEndDate(endDate);
 
         return filterViewDto;
     }
