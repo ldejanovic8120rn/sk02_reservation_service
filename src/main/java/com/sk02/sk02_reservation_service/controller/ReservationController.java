@@ -22,7 +22,7 @@ public class ReservationController {
     }
 
     @GetMapping("/manager")
-    @CheckSecurity(roles = {"ADMIN", "MANAGER"})
+    @CheckSecurity(roles = {"MANAGER"})
     public ResponseEntity<List<ReservationDto>> getReservationsByHotel(@RequestHeader("Authorization") String authorization){
         return new ResponseEntity<>(reservationService.getReservationsByHotel(authorization), HttpStatus.OK);
     }
@@ -37,5 +37,19 @@ public class ReservationController {
     @CheckSecurity(roles = {"CLIENT"})
     public ResponseEntity<ReservationDto> makeReservation(@RequestHeader("Authorization") String authorization, @RequestBody ReservationCreateDto reservationCreateDto){
         return new ResponseEntity<>(reservationService.makeReservation(reservationCreateDto, authorization), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/manager/{id}")
+    @CheckSecurity(roles = {"MANAGER"})
+    public ResponseEntity<HttpStatus> deleteReservationManager(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        reservationService.deleteReservationManager(id, authorization);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @CheckSecurity(roles = {"CLIENT"})
+    public ResponseEntity<HttpStatus> deleteReservation(@RequestHeader("Authorization") String authorization, @PathVariable("id") Long id){
+        reservationService.deleteReservation(id, authorization);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

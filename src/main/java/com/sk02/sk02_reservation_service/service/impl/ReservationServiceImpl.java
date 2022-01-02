@@ -35,6 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
     private static final String hotelNotFound = "Hotel with given id not found!";
     private static final String roomTypeNotFound = "Room type with given id not found!";
     private static final String reservationTaken = "Reservation for this time period has already been made! Be faster next time :)";
+    private static final String reservationNotFound = "Reservation with given id not found!";
 
     private final TokenService tokenService;
     private final RestTemplate userServiceRestTemplate;
@@ -143,6 +144,50 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationRepository.save(reservation);
         return reservationMapper.reservationToReservationDto(reservation);
+    }
+
+    @Override
+    public void deleteReservationManager(Long id, String authorization) {
+        Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
+        Long managerId = claims.get("id", Long.class);
+
+        ResponseEntity<ManagerAttributesDto> managerAttributesResponseEntity = null;
+        managerAttributesResponseEntity = userServiceRestTemplate.exchange("/manager-attributes/" + managerId, HttpMethod.GET, null, ManagerAttributesDto.class);
+        String hotelName = managerAttributesResponseEntity.getBody().getHotelName();
+
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new NotFoundException(reservationNotFound));
+        String username = reservation.getUsername();
+
+        if(reservation.getHotel().getName().equals(hotelName)){
+            Period periodToDelete = periodRepository.findPeriodByStartDateAndEndDateAndRoomId(reservation.getStartDate(), reservation.getEndDate(), reservation.getRoom().getId()).get(0);
+            reservation.getRoom().getPeriods().remove(periodToDelete);
+
+            periodRepository.delete(periodToDelete);
+            roomRepository.save(reservation.getRoom());
+            reservationRepository.delete(reservation);
+
+            userServiceRestTemplate.exchange("/client-attributes/cancel/" + username, HttpMethod.PUT, null, HttpStatus.class);
+        }
+
+    }
+
+    @Override
+    public void deleteReservation(Long id, String authorization) {
+        Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
+        String username = claims.get("username", String.class);
+
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new NotFoundException(reservationNotFound));
+
+        if(username.equals(reservation.getUsername())){
+            Period periodToDelete = periodRepository.findPeriodByStartDateAndEndDateAndRoomId(reservation.getStartDate(), reservation.getEndDate(), reservation.getRoom().getId()).get(0);
+            reservation.getRoom().getPeriods().remove(periodToDelete);
+
+            periodRepository.delete(periodToDelete);
+            roomRepository.save(reservation.getRoom());
+            reservationRepository.delete(reservation);
+
+            userServiceRestTemplate.exchange("/client-attributes/cancel/" + username, HttpMethod.PUT, null, HttpStatus.class);
+        }
     }
 
     private int getDaysBetween(Date startDate, Date endDate){
