@@ -1,5 +1,6 @@
 package com.sk02.sk02_reservation_service.service;
 
+import com.sk02.sk02_reservation_service.dto.hotel.BestHotelDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewCreateDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewFilterDto;
@@ -14,4 +15,5 @@ public interface ReviewService {
     void deleteReview(Long id, String authorization);
 
     List<ReviewDto> filterReviews(ReviewFilterDto reviewFilterDto);
+    List<BestHotelDto> bestHotels();
 }

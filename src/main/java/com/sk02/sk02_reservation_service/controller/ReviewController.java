@@ -1,5 +1,6 @@
 package com.sk02.sk02_reservation_service.controller;
 
+import com.sk02.sk02_reservation_service.dto.hotel.BestHotelDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewCreateDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewFilterDto;
@@ -46,5 +47,11 @@ public class ReviewController {
     @CheckSecurity(roles = {"CLIENT"})
     public ResponseEntity<List<ReviewDto>> filterReviews(@RequestHeader("Authorization") String authorization, @RequestBody ReviewFilterDto reviewFilterDto){
         return new ResponseEntity<>(reviewService.filterReviews(reviewFilterDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/best-hotels")
+    @CheckSecurity(roles = {"CLIENT"})
+    public ResponseEntity<List<BestHotelDto>> bestHotels(@RequestHeader("Authorization") String authorization){
+        return new ResponseEntity<>(reviewService.bestHotels(), HttpStatus.OK);
     }
 }

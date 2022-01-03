@@ -2,6 +2,7 @@ package com.sk02.sk02_reservation_service.service.impl;
 
 import com.sk02.sk02_reservation_service.domain.Hotel;
 import com.sk02.sk02_reservation_service.domain.Review;
+import com.sk02.sk02_reservation_service.dto.hotel.BestHotelDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewCreateDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewFilterDto;
@@ -28,10 +29,17 @@ public class ReviewServiceImpl implements ReviewService {
     private static final String reviewNotFound = "Review with given id not found!";
     private static final String privilegeError = "You don't have permission for this action!";
 
-    private TokenService tokenService;
-    private HotelRepository hotelRepository;
-    private ReviewRepository reviewRepository;
-    private ReviewMapper reviewMapper;
+    private final TokenService tokenService;
+    private final HotelRepository hotelRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewMapper reviewMapper;
+
+    public ReviewServiceImpl(TokenService tokenService, HotelRepository hotelRepository, ReviewRepository reviewRepository, ReviewMapper reviewMapper) {
+        this.tokenService = tokenService;
+        this.hotelRepository = hotelRepository;
+        this.reviewRepository = reviewRepository;
+        this.reviewMapper = reviewMapper;
+    }
 
     @Override
     public ReviewDto createReview(ReviewCreateDto reviewCreateDto, String authorization) {
@@ -101,5 +109,10 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return reviews;
+    }
+
+    @Override
+    public List<BestHotelDto> bestHotels() {
+        return reviewRepository.bestHotelsList();
     }
 }
