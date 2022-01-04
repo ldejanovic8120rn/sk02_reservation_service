@@ -12,6 +12,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findReservationByHotel_Name(String hotelName);
     List<Reservation> findReservationByUsername(String username);
-    List<Reservation> findReservationByStartDateEqualsAndSent(Date startDate, boolean sent);
     List<Reservation> findReservationByStartDateBetweenAndSent(Date startDate, Date endDate, boolean sent);
 }
