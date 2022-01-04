@@ -83,4 +83,18 @@ public class NotificationServiceImpl implements NotificationService {
 
         jmsTemplate.convertAndSend(notificationDestination, messageHelper.createTextMessage(notificationTransferDto));
     }
+
+    @Override
+    public void remindClient(String username, String email) {
+        NotificationTransferDto notificationTransferDto = new NotificationTransferDto();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("%username", username);
+
+        notificationTransferDto.setType("REMINDER");
+        notificationTransferDto.setEmail(email);
+        notificationTransferDto.setParameters(map);
+
+        jmsTemplate.convertAndSend(notificationDestination, messageHelper.createTextMessage(notificationTransferDto));
+    }
 }

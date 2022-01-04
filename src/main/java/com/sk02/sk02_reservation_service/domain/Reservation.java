@@ -23,6 +23,7 @@ public class Reservation {
     private Date endDate;
 
     private double price;
+    private boolean sent;
 
     public Long getId() {
         return id;
@@ -78,5 +79,13 @@ public class Reservation {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }

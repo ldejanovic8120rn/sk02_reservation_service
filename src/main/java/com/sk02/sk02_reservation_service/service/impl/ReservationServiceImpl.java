@@ -102,6 +102,7 @@ public class ReservationServiceImpl implements ReservationService {
         String email = claims.get("email", String.class);
         Long id = claims.get("id", Long.class);
         reservation.setUsername(username);
+        reservation.setSent(false);
 
         reservation.setHotel(hotel);
 
