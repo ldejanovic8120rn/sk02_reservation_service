@@ -11,6 +11,8 @@ import com.sk02.sk02_reservation_service.repository.HotelRepository;
 import com.sk02.sk02_reservation_service.repository.PeriodRepository;
 import com.sk02.sk02_reservation_service.service.HotelFilterService;
 import org.javatuples.Pair;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,30 +38,30 @@ public class HotelFilterServiceImpl implements HotelFilterService {
     }
 
     @Override
-    public List<HotelFilterViewDto> findHotels(HotelFilterDto hotelFilterDto) {
+    public List<HotelFilterViewDto> findHotels(HotelFilterDto hotelFilterDto, Pageable pageable) {
 
         if(hotelFilterDto.getStartDate() == null || hotelFilterDto.getEndDate() == null){
             throw new DateRequiredException(dateRequiredMessage);
         }
 
-        List<Hotel> hotels;
+        Page<Hotel> hotels;
         if(hotelFilterDto.getCity() != null && hotelFilterDto.getName() != null){
-            hotels = hotelRepository.findHotelByCityAndName(hotelFilterDto.getCity(), hotelFilterDto.getName());
+            hotels = hotelRepository.findHotelByCityAndName(hotelFilterDto.getCity(), hotelFilterDto.getName(), pageable);
         }
         else if(hotelFilterDto.getName() != null){
-            hotels = hotelRepository.findHotelByName(hotelFilterDto.getName());
+            hotels = hotelRepository.findHotelByName(hotelFilterDto.getName(), pageable);
         }
         else if(hotelFilterDto.getCity() != null){
-            hotels = hotelRepository.findHotelByCity(hotelFilterDto.getCity());
+            hotels = hotelRepository.findHotelByCity(hotelFilterDto.getCity(), pageable);
         }
         else {
-            hotels = hotelRepository.findAll();
+            hotels = hotelRepository.findAll(pageable);
         }
 
         return filterDates(hotels, hotelFilterDto.getStartDate(), hotelFilterDto.getEndDate(), hotelFilterDto.getPriceSort());
     }
 
-    private List<HotelFilterViewDto> filterDates(List<Hotel> hotels, Date startDate, Date endDate, String priceSort){
+    private List<HotelFilterViewDto> filterDates(Page<Hotel> hotels, Date startDate, Date endDate, String priceSort){
         List<HotelFilterViewDto> hotelsToReturn = new ArrayList<>();
         List<Pair<String, String>> hotelCategoryPairs = new ArrayList<>();
 
@@ -89,7 +91,6 @@ public class HotelFilterServiceImpl implements HotelFilterService {
                 Collections.sort(hotelsToReturn, Collections.reverseOrder());
             }
         }
-
 
         return hotelsToReturn;
     }

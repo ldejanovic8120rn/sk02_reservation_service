@@ -2,6 +2,8 @@ package com.sk02.sk02_reservation_service.repository;
 
 import com.sk02.sk02_reservation_service.domain.Review;
 import com.sk02.sk02_reservation_service.dto.hotel.BestHotelDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

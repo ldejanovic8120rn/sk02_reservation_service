@@ -5,6 +5,8 @@ import com.sk02.sk02_reservation_service.dto.reservation.ReservationDto;
 import com.sk02.sk02_reservation_service.security.CheckHotelManager;
 import com.sk02.sk02_reservation_service.security.CheckSecurity;
 import com.sk02.sk02_reservation_service.service.ReservationService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +26,13 @@ public class ReservationController {
     @GetMapping("/manager")
     @CheckSecurity(roles = {"MANAGER"})
     public ResponseEntity<List<ReservationDto>> getReservationsByHotel(@RequestHeader("Authorization") String authorization){
-        return new ResponseEntity<>(reservationService.getReservationsByHotel(authorization), HttpStatus.OK);
+        return new ResponseEntity<>(reservationService.getReservationsByHotel(authorization, PageRequest.of(0, 20)), HttpStatus.OK);
     }
 
     @GetMapping
     @CheckSecurity(roles = {"CLIENT"})
     public ResponseEntity<List<ReservationDto>> getReservations(@RequestHeader("Authorization") String authorization){
-        return new ResponseEntity<>(reservationService.getReservations(authorization), HttpStatus.OK);
+        return new ResponseEntity<>(reservationService.getReservations(authorization, PageRequest.of(0, 20)), HttpStatus.OK);
     }
 
     @PostMapping

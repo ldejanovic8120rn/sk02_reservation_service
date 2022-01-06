@@ -5,6 +5,8 @@ import com.sk02.sk02_reservation_service.security.CheckHotelManager;
 import com.sk02.sk02_reservation_service.security.CheckSecurity;
 import com.sk02.sk02_reservation_service.service.HotelFilterService;
 import com.sk02.sk02_reservation_service.service.HotelService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +48,6 @@ public class HotelController {
 
     @GetMapping("/filter")
     public ResponseEntity<List<HotelFilterViewDto>> filterHotels(@RequestBody HotelFilterDto hotelFilterDto){
-        return new ResponseEntity<>(hotelFilterService.findHotels(hotelFilterDto), HttpStatus.OK);
+        return new ResponseEntity<>(hotelFilterService.findHotels(hotelFilterDto, PageRequest.of(0, 20)), HttpStatus.OK);
     }
 }

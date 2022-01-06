@@ -15,6 +15,8 @@ import com.sk02.sk02_reservation_service.repository.ReviewRepository;
 import com.sk02.sk02_reservation_service.security.service.TokenService;
 import com.sk02.sk02_reservation_service.service.ReviewService;
 import io.jsonwebtoken.Claims;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,19 +88,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> filterReviews(ReviewFilterDto reviewFilterDto) {
-        List<Hotel> hotels;
+    public List<ReviewDto> filterReviews(ReviewFilterDto reviewFilterDto, Pageable pageable) {
+        Page<Hotel> hotels;
         if(reviewFilterDto.getCity() != null && reviewFilterDto.getHotelName() != null){
-            hotels = hotelRepository.findHotelByCityAndName(reviewFilterDto.getCity(), reviewFilterDto.getHotelName());
+            hotels = hotelRepository.findHotelByCityAndName(reviewFilterDto.getCity(), reviewFilterDto.getHotelName(), pageable);
         }
         else if(reviewFilterDto.getHotelName() != null){
-            hotels = hotelRepository.findHotelByName(reviewFilterDto.getHotelName());
+            hotels = hotelRepository.findHotelByName(reviewFilterDto.getHotelName(), pageable);
         }
         else if(reviewFilterDto.getCity() != null){
-            hotels = hotelRepository.findHotelByCity(reviewFilterDto.getCity());
+            hotels = hotelRepository.findHotelByCity(reviewFilterDto.getCity(), pageable);
         }
         else {
-            hotels = hotelRepository.findAll();
+            hotels = hotelRepository.findAll(pageable);
         }
 
         List<ReviewDto> reviews = new ArrayList<>();

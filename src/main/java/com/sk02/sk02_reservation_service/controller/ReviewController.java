@@ -7,6 +7,8 @@ import com.sk02.sk02_reservation_service.dto.review.ReviewFilterDto;
 import com.sk02.sk02_reservation_service.dto.review.ReviewUpdateDto;
 import com.sk02.sk02_reservation_service.security.CheckSecurity;
 import com.sk02.sk02_reservation_service.service.ReviewService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +48,7 @@ public class ReviewController {
     @GetMapping
     @CheckSecurity(roles = {"CLIENT"})
     public ResponseEntity<List<ReviewDto>> filterReviews(@RequestHeader("Authorization") String authorization, @RequestBody ReviewFilterDto reviewFilterDto){
-        return new ResponseEntity<>(reviewService.filterReviews(reviewFilterDto), HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.filterReviews(reviewFilterDto, PageRequest.of(0, 20)), HttpStatus.OK);
     }
 
     @GetMapping("/best-hotels")

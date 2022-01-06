@@ -14,6 +14,8 @@ import com.sk02.sk02_reservation_service.security.service.TokenService;
 import com.sk02.sk02_reservation_service.service.NotificationService;
 import com.sk02.sk02_reservation_service.service.ReservationService;
 import io.jsonwebtoken.Claims;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDto> getReservationsByHotel(String authorization) {
+    public List<ReservationDto> getReservationsByHotel(String authorization, Pageable pageable) {
         Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
         Long id = claims.get("id", Long.class);
 
@@ -67,7 +69,7 @@ public class ReservationServiceImpl implements ReservationService {
         managerAttributesResponseEntity = userServiceRestTemplate.exchange("/manager-attributes/" + id, HttpMethod.GET, null, ManagerAttributesDto.class);
         String hotelName = managerAttributesResponseEntity.getBody().getHotelName();
 
-        List<Reservation> reservations = reservationRepository.findReservationByHotel_Name(hotelName);
+        Page<Reservation> reservations = reservationRepository.findReservationByHotel_Name(hotelName, pageable);
         List<ReservationDto> reservationDtoList = new ArrayList<>();
 
         for(Reservation reservation: reservations){
@@ -78,11 +80,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationDto> getReservations(String authorization) {
+    public List<ReservationDto> getReservations(String authorization, Pageable pageable) {
         Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
         String username = claims.get("username", String.class);
 
-        List<Reservation> reservations = reservationRepository.findReservationByUsername(username);
+        Page<Reservation> reservations = reservationRepository.findReservationByUsername(username, pageable);
         List<ReservationDto> reservationDtoList = new ArrayList<>();
 
         for(Reservation reservation: reservations){
