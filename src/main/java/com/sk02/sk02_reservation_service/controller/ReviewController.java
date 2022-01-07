@@ -45,7 +45,7 @@ public class ReviewController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
+    @PostMapping("/filter")
     @CheckSecurity(roles = {"CLIENT"})
     public ResponseEntity<List<ReviewDto>> filterReviews(@RequestHeader("Authorization") String authorization, @RequestBody ReviewFilterDto reviewFilterDto){
         return new ResponseEntity<>(reviewService.filterReviews(reviewFilterDto, PageRequest.of(0, 20)), HttpStatus.OK);
