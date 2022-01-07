@@ -46,7 +46,7 @@ public class HotelController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/filter")
+    @PostMapping("/filter")
     public ResponseEntity<List<HotelFilterViewDto>> filterHotels(@RequestBody HotelFilterDto hotelFilterDto){
         return new ResponseEntity<>(hotelFilterService.findHotels(hotelFilterDto, PageRequest.of(0, 20)), HttpStatus.OK);
     }
