@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class HotelServiceImpl implements HotelService {
@@ -63,5 +66,10 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public void deleteHotel(Long id) {
         hotelRepository.deleteById(id);
+    }
+
+    @Override
+    public List<HotelDto> getAllHotels() {
+        return hotelRepository.findAll().stream().map(hotelMapper::hotelToHotelDto).collect(Collectors.toList());
     }
 }

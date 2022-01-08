@@ -26,6 +26,7 @@ public class HotelController {
         this.hotelFilterService = hotelFilterService;
     }
 
+
     @PostMapping
     @CheckSecurity(roles = {"ADMIN"})
     public ResponseEntity<HotelDto> createHotel(@RequestHeader("Authorization") String authorization, @RequestBody @Valid HotelCreateDto hotelCreateDto){
@@ -49,5 +50,11 @@ public class HotelController {
     @PostMapping("/filter")
     public ResponseEntity<List<HotelFilterViewDto>> filterHotels(@RequestBody HotelFilterDto hotelFilterDto){
         return new ResponseEntity<>(hotelFilterService.findHotels(hotelFilterDto, PageRequest.of(0, 20)), HttpStatus.OK);
+    }
+
+    @GetMapping
+    @CheckSecurity(roles = {"ADMIN", "MANAGER", "CLIENT"})
+    public ResponseEntity<List<HotelDto>> getAllHotels(@RequestHeader("Authorization") String authorization){
+        return new ResponseEntity<>(hotelService.getAllHotels(), HttpStatus.OK);
     }
 }
