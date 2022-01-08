@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -119,10 +120,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Page<ReviewDto> getClientReviews(String authorization, Pageable pageable) {
+    public List<ReviewDto> getClientReviews(String authorization) {
         Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
         String username = claims.get("username", String.class);
 
-        return reviewRepository.findAllByUsername(username, pageable).map(reviewMapper::reviewToReviewDto);
+        return reviewRepository.findAllByUsername(username).stream().map(reviewMapper::reviewToReviewDto).collect(Collectors.toList());
     }
 }

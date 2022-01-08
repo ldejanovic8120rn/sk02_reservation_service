@@ -53,8 +53,8 @@ public class ReviewController {
 
     @GetMapping
     @CheckSecurity(roles = {"CLIENT"})
-    public ResponseEntity<Page<ReviewDto>> getClientReviews(@RequestHeader("Authorization") String authorization){
-        return new ResponseEntity<>(reviewService.getClientReviews(authorization, PageRequest.of(0, 20)), HttpStatus.OK);
+    public ResponseEntity<List<ReviewDto>> getClientReviews(@RequestHeader("Authorization") String authorization){
+        return new ResponseEntity<>(reviewService.getClientReviews(authorization), HttpStatus.OK);
     }
 
     @GetMapping("/best-hotels")
