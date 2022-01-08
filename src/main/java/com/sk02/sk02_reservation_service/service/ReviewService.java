@@ -18,4 +18,6 @@ public interface ReviewService {
 
     List<ReviewDto> filterReviews(ReviewFilterDto reviewFilterDto, Pageable pageable);
     List<BestHotelDto> bestHotels();
+
+    Page<ReviewDto> getClientReviews(String authorization, Pageable pageable);
 }

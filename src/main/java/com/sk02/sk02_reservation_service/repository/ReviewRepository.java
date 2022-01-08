@@ -15,4 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query(value = "SELECT r.hotel_id as hotelId, h.name as hotelName, h.city as city, AVG(rate) as rate from reviews r JOIN hotels h ON r.hotel_id=h.id group by hotel_id, h.name, h.city order by AVG(rate) asc limit 3", nativeQuery = true)
     List<BestHotelDto> bestHotelsList();
+
+    Page<Review> findAllByUsername(String username, Pageable pageable);
 }

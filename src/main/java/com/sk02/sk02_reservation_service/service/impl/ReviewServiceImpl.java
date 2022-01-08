@@ -117,4 +117,12 @@ public class ReviewServiceImpl implements ReviewService {
     public List<BestHotelDto> bestHotels() {
         return reviewRepository.bestHotelsList();
     }
+
+    @Override
+    public Page<ReviewDto> getClientReviews(String authorization, Pageable pageable) {
+        Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
+        String username = claims.get("username", String.class);
+
+        return reviewRepository.findAllByUsername(username, pageable).map(reviewMapper::reviewToReviewDto);
+    }
 }
