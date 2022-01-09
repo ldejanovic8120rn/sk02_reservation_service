@@ -13,6 +13,8 @@ public class ReservationMapper {
 
         reservationDto.setId(reservation.getId());
         reservationDto.setRoomTypeId(reservation.getRoom().getRoomType().getId());
+        reservationDto.setRoomTypeCategory(reservation.getRoom().getRoomType().getCategory());
+        reservationDto.setHotelName(reservation.getHotel().getName());
         reservationDto.setUsername(reservation.getUsername());
         reservationDto.setPrice(reservation.getPrice());
         reservationDto.setStartDate(reservation.getStartDate());

@@ -10,6 +10,8 @@ public class ReservationDto {
     private String username;
 
     private Long roomTypeId;
+    private String roomTypeCategory;
+    private String hotelName;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date startDate;
@@ -40,6 +42,22 @@ public class ReservationDto {
 
     public void setRoomTypeId(Long roomTypeId) {
         this.roomTypeId = roomTypeId;
+    }
+
+    public String getRoomTypeCategory() {
+        return roomTypeCategory;
+    }
+
+    public void setRoomTypeCategory(String roomTypeCategory) {
+        this.roomTypeCategory = roomTypeCategory;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 
     public Date getStartDate() {
