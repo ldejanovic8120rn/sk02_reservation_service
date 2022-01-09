@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,13 +30,18 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private final RoomTypeMapper roomTypeMapper;
     private final RoomTypeRepository roomTypeRepository;
     private final HotelRepository hotelRepository;
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
 
     public RoomTypeServiceImpl(RoomTypeMapper roomTypeMapper, RoomTypeRepository roomTypeRepository, HotelRepository hotelRepository, RoomRepository roomRepository) {
         this.roomTypeMapper = roomTypeMapper;
         this.roomTypeRepository = roomTypeRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
+    }
+
+    @Override
+    public List<RoomTypeDto> getRoomTypes(Long hotelId) {
+        return roomTypeRepository.findAllByHotelId(hotelId).stream().map(roomTypeMapper::roomTypeToRoomTypeDto).collect(Collectors.toList());
     }
 
     @Override
