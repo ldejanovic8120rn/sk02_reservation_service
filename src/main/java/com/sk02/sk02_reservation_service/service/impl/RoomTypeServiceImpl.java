@@ -131,7 +131,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             roomTypeIntersected(upperBound + 1, roomType.getId(), roomType.getHotel().getId(), true);
         }
         else {
-            for (int i = upperBound; i < roomType.getUpperBound(); i++){
+            for (int i = upperBound + 1; i <= roomType.getUpperBound(); i++){
                 Room room = roomRepository.findRoomByRoomNumberAndHotelId(i, roomType.getHotel().getId());
                 roomType.getRooms().remove(room);
                 roomRepository.delete(room);
