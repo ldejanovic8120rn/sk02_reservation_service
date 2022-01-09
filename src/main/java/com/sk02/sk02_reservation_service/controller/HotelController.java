@@ -57,4 +57,10 @@ public class HotelController {
     public ResponseEntity<List<HotelDto>> getAllHotels(@RequestHeader("Authorization") String authorization){
         return new ResponseEntity<>(hotelService.getAllHotels(), HttpStatus.OK);
     }
+
+    @GetMapping("/manager-hotel")
+    @CheckSecurity(roles = {"MANAGER"})
+    public ResponseEntity<HotelDto> getManagerHotel(@RequestHeader("Authorization") String authorization){
+        return new ResponseEntity<>(hotelService.getHotelByManager(authorization), HttpStatus.OK);
+    }
 }

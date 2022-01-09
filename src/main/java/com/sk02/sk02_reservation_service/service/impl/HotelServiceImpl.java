@@ -9,9 +9,12 @@ import com.sk02.sk02_reservation_service.dto.user.ManagerAttributesDto;
 import com.sk02.sk02_reservation_service.exception.NotFoundException;
 import com.sk02.sk02_reservation_service.mapper.HotelMapper;
 import com.sk02.sk02_reservation_service.repository.HotelRepository;
+import com.sk02.sk02_reservation_service.security.service.TokenService;
 import com.sk02.sk02_reservation_service.service.HotelService;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -24,15 +27,18 @@ import java.util.stream.Collectors;
 public class HotelServiceImpl implements HotelService {
 
     private static final String hotelNotFound = "Hotel with given id not found!";
+    private static final String hotelNameNotFound = "Hotel with given name not found!";
 
     private final HotelMapper hotelMapper;
     private final HotelRepository hotelRepository;
     private final RestTemplate userServiceRestTemplate;
+    private final TokenService tokenService;
 
-    public HotelServiceImpl(HotelMapper hotelMapper, HotelRepository hotelRepository, RestTemplate userServiceRestTemplate) {
+    public HotelServiceImpl(HotelMapper hotelMapper, HotelRepository hotelRepository, RestTemplate userServiceRestTemplate, TokenService tokenService) {
         this.hotelMapper = hotelMapper;
         this.hotelRepository = hotelRepository;
         this.userServiceRestTemplate = userServiceRestTemplate;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -71,5 +77,16 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public List<HotelDto> getAllHotels() {
         return hotelRepository.findAll().stream().map(hotelMapper::hotelToHotelDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public HotelDto getHotelByManager(String authorization) {
+        Claims claims = tokenService.parseToken(authorization.split(" ")[1]);
+        Long managerId = claims.get("id", Long.class);
+
+        ResponseEntity<ManagerAttributesDto> managerAttr = userServiceRestTemplate.exchange("/manager-attributes/" + managerId, HttpMethod.GET, null, ManagerAttributesDto.class);
+
+        Hotel hotel = hotelRepository.findHotelByName(managerAttr.getBody().getHotelName()).orElseThrow(() -> new NotFoundException(hotelNameNotFound));
+        return hotelMapper.hotelToHotelDto(hotel);
     }
 }

@@ -17,4 +17,6 @@ public interface HotelService {
     void deleteHotel(Long id);
 
     List<HotelDto> getAllHotels();
+
+    HotelDto getHotelByManager(String authorization);
 }
