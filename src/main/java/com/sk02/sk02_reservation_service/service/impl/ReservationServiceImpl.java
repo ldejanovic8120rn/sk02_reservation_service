@@ -8,6 +8,7 @@ import com.sk02.sk02_reservation_service.dto.user.RankDto;
 import com.sk02.sk02_reservation_service.dto.user.UserDto;
 import com.sk02.sk02_reservation_service.exception.HttpResponseException;
 import com.sk02.sk02_reservation_service.exception.NotFoundException;
+import com.sk02.sk02_reservation_service.exception.RankException;
 import com.sk02.sk02_reservation_service.exception.ReservationTakenException;
 import com.sk02.sk02_reservation_service.mapper.ReservationMapper;
 import com.sk02.sk02_reservation_service.repository.*;
@@ -232,6 +233,9 @@ public class ReservationServiceImpl implements ReservationService {
         System.out.println("Getting rank data for user with id " + userId);
         try {
             return userServiceRestTemplate.exchange("/ranks/discount/" + userId, HttpMethod.GET, null, RankDto.class).getBody();
+        }
+        catch (RankException rankException) {
+            return null;
         }
         catch (NotFoundException notFoundException){
             throw new NotFoundException("Rank for given user not found!");
