@@ -6,6 +6,7 @@ import com.sk02.sk02_reservation_service.dto.reservation.ReservationDto;
 import com.sk02.sk02_reservation_service.dto.user.ManagerAttributesDto;
 import com.sk02.sk02_reservation_service.dto.user.RankDto;
 import com.sk02.sk02_reservation_service.dto.user.UserDto;
+import com.sk02.sk02_reservation_service.exception.HttpResponseException;
 import com.sk02.sk02_reservation_service.exception.NotFoundException;
 import com.sk02.sk02_reservation_service.exception.ReservationTakenException;
 import com.sk02.sk02_reservation_service.mapper.ReservationMapper;
@@ -13,6 +14,7 @@ import com.sk02.sk02_reservation_service.repository.*;
 import com.sk02.sk02_reservation_service.security.service.TokenService;
 import com.sk02.sk02_reservation_service.service.NotificationService;
 import com.sk02.sk02_reservation_service.service.ReservationService;
+import io.github.resilience4j.retry.Retry;
 import io.jsonwebtoken.Claims;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,8 +49,9 @@ public class ReservationServiceImpl implements ReservationService {
     private final RoomRepository roomRepository;
     private final ReservationMapper reservationMapper;
     private final NotificationService notificationService;
+    private final Retry userServiceRetry;
 
-    public ReservationServiceImpl(TokenService tokenService, RestTemplate userServiceRestTemplate, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomTypeRepository roomTypeRepository, PeriodRepository periodRepository, RoomRepository roomRepository, ReservationMapper reservationMapper, NotificationService notificationService) {
+    public ReservationServiceImpl(TokenService tokenService, RestTemplate userServiceRestTemplate, ReservationRepository reservationRepository, HotelRepository hotelRepository, RoomTypeRepository roomTypeRepository, PeriodRepository periodRepository, RoomRepository roomRepository, ReservationMapper reservationMapper, NotificationService notificationService, Retry userServiceRetry) {
         this.tokenService = tokenService;
         this.userServiceRestTemplate = userServiceRestTemplate;
         this.reservationRepository = reservationRepository;
@@ -58,6 +61,7 @@ public class ReservationServiceImpl implements ReservationService {
         this.roomRepository = roomRepository;
         this.reservationMapper = reservationMapper;
         this.notificationService = notificationService;
+        this.userServiceRetry = userServiceRetry;
     }
 
     @Override
@@ -136,13 +140,11 @@ public class ReservationServiceImpl implements ReservationService {
             throw new ReservationTakenException(reservationTaken);
         }
 
-        //TODO RETRY PATTERN
-        ResponseEntity<RankDto> rankDto = null;
-        rankDto = userServiceRestTemplate.exchange("/ranks/discount/" + id, HttpMethod.GET, null, RankDto.class);
+        RankDto rankDto = Retry.decorateSupplier(userServiceRetry, () -> getUserRank(id)).get();
 
         double price = getDaysBetween(reservationCreateDto.getStartDate(), reservationCreateDto.getEndDate()) * roomType.getPrice();
-        if(rankDto.getBody().getDiscount() != 0){
-            price *= (1 -rankDto.getBody().getDiscount());
+        if(rankDto != null && rankDto.getDiscount() != 0){
+            price *= (1 - rankDto.getDiscount());
         }
         reservation.setPrice(price);
 
@@ -224,5 +226,18 @@ public class ReservationServiceImpl implements ReservationService {
     private int getDaysBetween(Date startDate, Date endDate){
         long daysDifference = endDate.getTime() - startDate.getTime();
         return (int)TimeUnit.DAYS.convert(daysDifference, TimeUnit.MILLISECONDS);
+    }
+
+    private RankDto getUserRank(Long userId){
+        System.out.println("Getting rank data for user with id " + userId);
+        try {
+            return userServiceRestTemplate.exchange("/ranks/discount/" + userId, HttpMethod.GET, null, RankDto.class).getBody();
+        }
+        catch (NotFoundException notFoundException){
+            throw new NotFoundException("Rank for given user not found!");
+        }
+        catch (Exception e){
+            throw new RuntimeException("Internal Server Error.");
+        }
     }
 }
